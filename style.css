@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
     background-image: url("scr/obschaga2.jpg");
@@ -16,8 +20,12 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 320px;
+}
+
+h2 {
     text-align: center;
-    width: 300px;
+    margin-bottom: 20px;
 }
 
 label {
@@ -25,28 +33,37 @@ label {
     text-align: left;
     font-weight: bold;
     margin-top: 10px;
-    margin-left: 10px;
 }
 
 input {
-    width: 90%;
+    width: 100%;
     padding: 10px;
-    margin: 10px 0;
+    margin-top: 5px;
+    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 16px;
+}
+
+input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 button {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
+    font-size: 16px;
     cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s;
 }
 
 button:hover {
     background-color: #0056b3;
 }
-
