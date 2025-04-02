@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Панель студент</title>
+  <script>
+    // Проверка роли при загрузке страницы
+    if (localStorage.getItem("role") !== "admin") {
+      window.location.href = "index.html";
+    }
+
+    // Функция выхода
+    function logout() {
+      localStorage.removeItem("student"); // Удаляем роль из localStorage
+      window.location.href = "index.html"; // Перенаправляем на страницу входа
+    }
+  </script>
+</head>
+<body>
+
+<h1>Добро пожаловать, Студент!</h1>
+<button onclick="logout()">Выйти</button>
+
+</body>
+</html>

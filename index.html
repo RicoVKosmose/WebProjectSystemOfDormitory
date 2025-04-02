@@ -26,8 +26,8 @@
     document.getElementById("login-form").addEventListener("submit", async function(event) {
         event.preventDefault();
 
-        const login = document.getElementById("login").value;  // login с маленькой буквы!
-        const password = document.getElementById("password").value;  // password с маленькой буквы!
+        const login = document.getElementById("login").value;
+        const password = document.getElementById("password").value;
 
         const response = await fetch("http://localhost:3001/login", {
             method: "POST",
@@ -36,8 +36,24 @@
         });
 
         const data = await response.json();
-        document.getElementById("message").innerText = data.message || data.error;
+
+        if (data.error) {
+            document.getElementById("message").innerText = data.error;
+        } else {
+            // Сохраняем роль в localStorage
+            localStorage.setItem("role", data.role);
+
+            // Перенаправляем на страницу в зависимости от роли
+            if (data.role === "admin") {
+                window.location.href = "admin.html";
+            } else if (data.role === "worker") {
+                window.location.href = "worker.html";
+            } else  {
+                window.location.href = "student.html";
+            }
+        }
     });
+
 </script>
 
 </body>

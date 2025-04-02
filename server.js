@@ -33,15 +33,13 @@ app.post("/login", (req, res) => {
         if (results.length === 0) return res.status(400).json({ error: "Пользователь не найден" });
 
         const user = results[0];
-        console.log(`Введенный пароль: ${password}, Пароль из БД: ${user.password}`);
 
-        // Простое сравнение пароля (НЕ БЕЗОПАСНО)
         if (password !== user.password) return res.status(401).json({ error: "Неверный пароль" });
 
-        res.json({ message: "Успешный вход!" });
+        // Добавляем отправку роли пользователя
+        res.json({ message: "Успешный вход!", role: user.role });
     });
 });
-
 
 // Запуск сервера
 app.listen(3001, () => {
