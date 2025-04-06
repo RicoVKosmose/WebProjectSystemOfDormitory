@@ -5,14 +5,14 @@
   <title>Панель студент</title>
   <script>
     // Проверка роли при загрузке страницы
-    if (localStorage.getItem("role") !== "admin") {
+    if (localStorage.getItem("role") !== "student") {
       window.location.href = "index.html";
     }
 
     // Функция выхода
     function logout() {
-      localStorage.removeItem("student"); // Удаляем роль из localStorage
-      window.location.href = "index.html"; // Перенаправляем на страницу входа
+      localStorage.removeItem("role");
+      window.location.href = "index.html";
     }
   </script>
 </head>
