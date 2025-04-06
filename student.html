@@ -2,24 +2,77 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Панель студент</title>
-  <script>
-    // Проверка роли при загрузке страницы
-    if (localStorage.getItem("role") !== "student") {
-      window.location.href = "index.html";
-    }
-
-    // Функция выхода
-    function logout() {
-      localStorage.removeItem("role");
-      window.location.href = "index.html";
-    }
-  </script>
+  <title>Страница студента</title>
+  <link rel="stylesheet" href="student.css">
 </head>
 <body>
 
-<h1>Добро пожаловать, Студент!</h1>
-<button onclick="logout()">Выйти</button>
+<header>
+  <div >
+    <a href="#">Личная информация</a>
+    <a href="#">Уведомления</a>
+    <a href="#">Контакты</a>
+  </div>
+  <div id="datetime">13:45 03.04.2024</div>
+</header>
+
+
+
+<main class="dashboard">
+
+  <div class="card news">
+    <h2>Лента новостей</h2>
+    <p><strong>02.04.2024</strong><br>Проверка системы пожарной безопасности</p>
+    <p><strong>31.03.2024</strong><br>Отключение горячей воды 5 апреля с 10:00 до 15:00</p>
+  </div>
+
+  <div class="card events">
+    <h2>Мероприятия</h2>
+    <p><strong>03.04.2024</strong><br>Семинар «Карьера в IT»</p>
+  </div>
+
+  <div class="card info">
+    <h2>Личная информация</h2>
+    <p><strong>Блок:</strong> 9</p>
+    <p><strong>Имя:</strong> Иванов Иван</p>
+    <p><strong>Комната:</strong> 234</p>
+    <p><strong>Отработанные часы:</strong>14</p>
+  </div>
+
+  <div class="card request">
+    <h2>Оставить заявку</h2>
+    <label for="repair">Заявка на ремонт</label>
+    <textarea id="repair" placeholder="Опишите проблему..."></textarea>
+    <button>Отправить</button>
+  </div>
+
+  <div class="card payment">
+    <h2>Оплата задолженности</h2>
+    <p><strong>12 руб.</strong></p>
+    <img src="scr/bstu_qrcode.png" alt="QR для оплаты" class="qr">
+    <p>Как оплатить</p>
+    <button>Выйти</button>
+  </div>
+
+</main>
+
+<script>
+  function updateDateTime() {
+    const now = new Date();
+    document.getElementById('datetime').textContent = now.toLocaleString('ru-RU', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  }
+
+  updateDateTime();
+  setInterval(updateDateTime, 1000);
+</script>
+
 
 </body>
 </html>

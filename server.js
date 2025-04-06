@@ -1,6 +1,5 @@
 const express = require("express");
 const mysql = require("mysql2");
-const bcrypt = require("bcryptjs");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
@@ -40,6 +39,8 @@ app.post("/login", (req, res) => {
         res.json({ message: "Успешный вход!", role: user.role });
     });
 });
+
+
 
 // Запуск сервера
 app.listen(3001, () => {
