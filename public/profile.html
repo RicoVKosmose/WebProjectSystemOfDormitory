@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мой профиль</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+<header>
+    <div>
+        <a href="student.html">На главную</a>
+        <a href="index.html">Выход</a>
+    </div>
+    <div id="datetime"></div>
+</header>
+
+<main class="profile-container">
+    <div class="profile-card">
+        <!-- Аватар и форма загрузки -->
+        <img src="images/avatar.png" alt="Фото профиля" class="avatar">
+
+        <form id="avatarForm" enctype="multipart/form-data">
+            <input type="file" name="avatar" accept="image/*" />
+            <button type="submit">Загрузить аватар</button>
+        </form>
+
+        <!-- Сюда будет подгружаться информация о профиле -->
+        <div id="profile-info">
+            <p>Загрузка профиля...</p>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Отображение текущей даты и времени
+    function updateDateTime() {
+        const now = new Date();
+        document.getElementById('datetime').textContent = now.toLocaleString('ru-RU', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    }
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+</script>
+
+<!-- Подключаем логику профиля -->
+<script src="profile.js"></script>
+<script>
+    void loadProfile();
+</script>
+</body>
+</html>
