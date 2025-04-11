@@ -121,21 +121,60 @@
 </main>
 
 <script>
+
+    window.addEventListener("DOMContentLoaded", async () => {
+        try {
+            const res = await fetch('/api/duty-photos', { credentials: 'include' });
+            const data = await res.json();
+
+            if (data.photos && Array.isArray(data.photos)) {
+                data.photos.forEach(photo => {
+                    const selector = `.floor[data-wing="${photo.fluredge}"][data-floor="${photo.floor}"] .preview`;
+                    const img = document.querySelector(selector);
+                    if (img) {
+                        img.src = photo.url;
+                    }
+                });
+            }
+        } catch (err) {
+            console.error("Ошибка при загрузке duty-фотографий:", err);
+        }
+    });
+
     document.querySelectorAll(".upload-btn").forEach(button => {
-        button.addEventListener("click", (e) => {
+        button.addEventListener("click", async (e) => {
             const block = e.target.closest(".floor");
             const fileInput = block.querySelector("input[type='file']");
-            fileInput.click(); // открываем окно выбора файла
+            const wing = block.dataset.wing;
+            const floor = block.dataset.floor;
 
-            fileInput.onchange = () => {
+            fileInput.click(); // открываем диалог выбора
+
+            fileInput.onchange = async () => {
                 const file = fileInput.files[0];
-                const preview = block.querySelector(".preview");
                 if (file) {
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        preview.src = reader.result;
-                    };
-                    reader.readAsDataURL(file);
+                    const formData = new FormData();
+                    formData.append("image", file);
+                    formData.append("fluredge", wing);
+                    formData.append("floor", floor);
+
+                    try {
+                        const res = await fetch('/api/upload-duty-photo', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const data = await res.json();
+                        if (data.success) {
+                            const preview = block.querySelector(".preview");
+                            preview.src = `/uploads/duty/${wing}_${floor}.jpg?${Date.now()}`;
+                        } else {
+                            alert("Ошибка при загрузке фото");
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert("Ошибка соединения с сервером");
+                    }
                 }
             };
         });
@@ -143,12 +182,37 @@
 
 
     document.querySelectorAll(".delete-btn").forEach(button => {
-        button.addEventListener("click", (e) => {
+        button.addEventListener("click", async (e) => {
             const block = e.target.closest(".floor");
-            block.querySelector(".preview").src = "";
-            block.querySelector("input[type='file']").value = "";
+            const wing = block.dataset.wing;
+            const floor = block.dataset.floor;
+
+            if (!confirm("Удалить фото?")) return;
+
+            try {
+                const res = await fetch("/api/delete-duty-photo", {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ fluredge: wing, floor })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    const preview = block.querySelector(".preview");
+                    preview.src = "";
+                    block.querySelector("input[type='file']").value = "";
+                } else {
+                    alert("Ошибка при удалении: " + data.error);
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Ошибка соединения с сервером");
+            }
         });
     });
+
 </script>
 
 </body>

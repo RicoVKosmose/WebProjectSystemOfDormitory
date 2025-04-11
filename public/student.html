@@ -34,7 +34,7 @@
 
   <div class="card duty-schedule">
     <h2>Дежурство на кухне</h2>
-    <img src="#" alt="Расписание дежурств" class="duty-image">
+    <img src="#" alt="Расписание дежурств" class="duty-image" id="duty-image">
   </div>
 
   <div class="card request">
@@ -65,6 +65,22 @@
       month: '2-digit',
       year: 'numeric'
     });
+  }
+
+  window.onload = async () => {
+    try {
+      const res = await fetch('/api/duty-photo');
+      const data = await res.json();
+      const dutyImage = document.getElementById('duty-image');
+
+      if (data.imagePath) {
+        dutyImage.src = data.imagePath;
+      } else {
+        dutyImage.alt = 'Фото не найдено';
+      }
+    } catch (err) {
+      console.error('Ошибка загрузки фото дежурства', err);
+    }
   }
 
   updateDateTime();
