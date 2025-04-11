@@ -3,23 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <title>Панель администратора</title>
+  <link rel="stylesheet" href="admin.css">
   <script>
-    // Проверка роли при загрузке страницы
     if (localStorage.getItem("role") !== "admin") {
       window.location.href = "index.html";
     }
 
-    // Функция выхода
     function logout() {
-      localStorage.removeItem("role"); // Удаляем роль из localStorage
-      window.location.href = "index.html"; // Перенаправляем на страницу входа
+      localStorage.removeItem("role");
+      window.location.href = "index.html";
+    }
+
+    function updateDateTime() {
+      const now = new Date();
+      document.getElementById('datetime').textContent = now.toLocaleString('ru-RU', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    }
+
+    window.onload = () => {
+      updateDateTime();
+      setInterval(updateDateTime, 1000);
     }
   </script>
 </head>
 <body>
 
-<h1>Добро пожаловать, администратор!</h1>
-<button onclick="logout()">Выйти</button>
+<header>
+  <div>
+    <a href="admin.html">Главная</a>
+    <a href="#">Настройки</a>
+  </div>
+  <div id="datetime">--:--</div>
+</header>
+
+<main class="dashboard">
+  <div class="card">
+    <h2>Пользователи</h2>
+    <p>Управление пользователями и учётными данными</p>
+    <button>Перейти</button>
+  </div>
+
+  <div class="card">
+    <h2>Новости</h2>
+    <p>Добавление новостей для студентов</p>
+    <button>Перейти</button>
+  </div>
+
+  <div class="card">
+    <h2>Заявки</h2>
+    <p>Просмотр заявок от студентов</p>
+    <button>Перейти</button>
+  </div>
+
+  <div class="card">
+    <h2>Мероприятия</h2>
+    <p>Загрузка информации о мероприятиях</p>
+    <button>Перейти</button>
+  </div>
+
+  <div class="card">
+    <h2>Кухонное дежурство</h2>
+    <p>Загрузка фото для блока "Дежурство на кухне"</p>
+    <button>Перейти</button>
+  </div>
+
+  <div class="card">
+    <h2>Управление часами</h2>
+    <p>Управление отработанными часами</p>
+    <button onclick="window.location.href='duty-manager.html'">Перейти</button>
+  </div>
+</main>
 
 </body>
 </html>
