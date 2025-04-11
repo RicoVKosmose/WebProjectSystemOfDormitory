@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Управление дежурствами</title>
+    <link rel="stylesheet" href="duty-manager.css">
+</head>
+<body>
+
+<header>
+    <h1>Дежурство на кухне</h1>
+    <a href="admin.html">← Назад в админ-панель</a>
+</header>
+
+<main class="duty-container">
+
+    <section class="wing">
+        <h2>Левое крыло</h2>
+        <div class="floor-blocks">
+            <!-- 5 этажей -->
+            <div class="floor" data-wing="left" data-floor="1">
+                <h3>1 этаж</h3>
+                <img src="" alt="Нет изображения" class="preview">
+                <input type="file" accept="image/*">
+                <div class="button-group">
+                    <button class="upload-btn">Добавить фото</button>
+                    <button class="delete-btn">Удалить фото</button>
+                </div>
+            </div>
+            <div class="floor" data-wing="left" data-floor="2">
+                <h3>2 этаж</h3>
+                <img src="" alt="Нет изображения" class="preview">
+                <input type="file" accept="image/*">
+                <div class="button-group">
+                    <button class="upload-btn">Добавить фото</button>
+                    <button class="delete-btn">Удалить фото</button>
+                </div>
+            </div>
+            <div class="floor" data-wing="left" data-floor="3">
+                <h3>3 этаж</h3>
+                <img src="" alt="Нет изображения" class="preview">
+                <input type="file" accept="image/*">
+                <div class="button-group">
+                    <button class="upload-btn">Добавить фото</button>
+                    <button class="delete-btn">Удалить фото</button>
+                </div>
+            </div>
+            <div class="floor" data-wing="left" data-floor="4">
+                <h3>4 этаж</h3>
+                <img src="" alt="Нет изображения" class="preview">
+                <input type="file" accept="image/*">
+                <div class="button-group">
+                    <button class="upload-btn">Добавить фото</button>
+                    <button class="delete-btn">Удалить фото</button>
+                </div>
+            </div>
+            <div class="floor" data-wing="left" data-floor="5">
+                <h3>5 этаж</h3>
+                <img src="" alt="Нет изображения" class="preview">
+                <input type="file" accept="image/*">
+                <div class="button-group">
+                    <button class="upload-btn">Добавить фото</button>
+                    <button class="delete-btn">Удалить фото</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="wing">
+        <h2>Правое крыло</h2>
+        <div class="floor-blocks">
+            <!-- 5 этажей -->
+            <div class="floor" data-wing="right" data-floor="1">
+                <h3>1 этаж</h3>
+                <img src="" alt="Нет изображения" class="preview">
+                <input type="file" accept="image/*">
+                <div class="button-group">
+                    <button class="upload-btn">Добавить фото</button>
+                    <button class="delete-btn">Удалить фото</button>
+                </div>
+            </div>
+            <div class="floor" data-wing="right" data-floor="2">
+                <h3>2 этаж</h3>
+                <img src="" alt="Нет изображения" class="preview">
+                <input type="file" accept="image/*">
+                <div class="button-group">
+                    <button class="upload-btn">Добавить фото</button>
+                    <button class="delete-btn">Удалить фото</button>
+                </div>
+            </div>
+            <div class="floor" data-wing="right" data-floor="3">
+                <h3>3 этаж</h3>
+                <img src="" alt="Нет изображения" class="preview">
+                <input type="file" accept="image/*">
+                <div class="button-group">
+                    <button class="upload-btn">Добавить фото</button>
+                    <button class="delete-btn">Удалить фото</button>
+                </div>
+            </div>
+            <div class="floor" data-wing="right" data-floor="4">
+                <h3>4 этаж</h3>
+                <img src="" alt="Нет изображения" class="preview">
+                <input type="file" accept="image/*">
+                <div class="button-group">
+                    <button class="upload-btn">Добавить фото</button>
+                    <button class="delete-btn">Удалить фото</button>
+                </div>
+            </div>
+            <div class="floor" data-wing="right" data-floor="5">
+                <h3>5 этаж</h3>
+                <img src="" alt="Нет изображения" class="preview">
+                <input type="file" accept="image/*">
+                <div class="button-group">
+                    <button class="upload-btn">Добавить фото</button>
+                    <button class="delete-btn">Удалить фото</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<script>
+    document.querySelectorAll(".upload-btn").forEach(button => {
+        button.addEventListener("click", (e) => {
+            const block = e.target.closest(".floor");
+            const fileInput = block.querySelector("input[type='file']");
+            fileInput.click(); // открываем окно выбора файла
+
+            fileInput.onchange = () => {
+                const file = fileInput.files[0];
+                const preview = block.querySelector(".preview");
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        preview.src = reader.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+        });
+    });
+
+
+    document.querySelectorAll(".delete-btn").forEach(button => {
+        button.addEventListener("click", (e) => {
+            const block = e.target.closest(".floor");
+            block.querySelector(".preview").src = "";
+            block.querySelector("input[type='file']").value = "";
+        });
+    });
+</script>
+
+</body>
+</html>
