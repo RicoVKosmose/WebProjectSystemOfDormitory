@@ -374,6 +374,68 @@
         });
     });
 
+    // 📂 Для новостей — храним их в отдельной папке uploads/news
+    const newsStorage = multer.diskStorage({
+        destination: (req, file, cb) => cb(null, "public/uploads/news"),
+        filename: (req, file, cb) => {
+            const ext = path.extname(file.originalname);
+            cb(null, `news-${Date.now()}${ext}`);
+        }
+    });
+    const uploadNews = multer({ storage: newsStorage });
+
+    // 📋 Получить все новости (архив)
+    app.get('/api/news', (req, res) => {
+        const sql = 'SELECT * FROM db.news ORDER BY created_at DESC';
+        db.query(sql, (err, results) => {
+            if (err) {
+                console.error('❌ Ошибка получения новостей:', err);
+                return res.status(500).json({ error: 'Ошибка сервера' });
+            }
+            res.json(results);
+        });
+    });
+
+    // ➕ Добавить новость
+    app.post('/api/add-news', uploadNews.single('image'), (req, res) => {
+        const { title, content } = req.body;
+        const imagePath = req.file ? `/uploads/news/${req.file.filename}` : null;
+
+        const sql = 'INSERT INTO db.news (title, content, image) VALUES (?, ?, ?)';
+        db.query(sql, [title, content, imagePath], (err, result) => {
+            if (err) {
+                console.error('❌ Ошибка добавления новости:', err);
+                return res.status(500).json({ error: 'Ошибка сервера' });
+            }
+            res.json({ message: 'Новость добавлена' });
+        });
+    });
+
+    // ❌ Удалить новость
+    app.delete('/api/news/:id', (req, res) => {
+        const { id } = req.params;
+        const getImageSql = 'SELECT image FROM db.news WHERE id = ?';
+        const deleteSql = 'DELETE FROM db.news WHERE id = ?';
+
+        db.query(getImageSql, [id], (err, results) => {
+            if (err) return res.status(500).json({ error: 'Ошибка сервера' });
+            if (results.length > 0 && results[0].image) {
+                const imagePath = path.join(__dirname, 'public', results[0].image);
+                fs.unlink(imagePath, (unlinkErr) => {
+                    if (unlinkErr && unlinkErr.code !== 'ENOENT') {
+                        console.error('❌ Ошибка удаления изображения:', unlinkErr);
+                    }
+                });
+            }
+
+            db.query(deleteSql, [id], (err2, result2) => {
+                if (err2) return res.status(500).json({ error: 'Ошибка сервера' });
+                res.json({ message: 'Новость удалена' });
+            });
+        });
+    });
+
+
     // 🚀
     app.listen(3001, () => {
         console.log("✅ Сервер запущен: http://localhost:3001");

@@ -1,0 +1,159 @@
+/* Стиль формы */
+.news-form {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 40px auto;
+}
+
+.news-form input[type="text"],
+.news-form textarea {
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+}
+
+.news-form input[type="text"]:focus,
+.news-form textarea:focus {
+    border-color: #1976d2;
+    outline: none;
+}
+
+.news-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.news-form input[type="file"] {
+    display: none; /* Скрываем стандартное поле для выбора файла */
+}
+
+.news-form label {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+    transition: background-color 0.2s ease, transform 0.1s ease-in-out;
+}
+
+.news-form label:hover {
+    background-color: #1565c0;
+    transform: scale(1.05);
+}
+
+.news-form label:active {
+    transform: scale(1);
+}
+
+.file-name {
+    margin-left: 12px;
+    font-size: 16px;
+    color: #444;
+    display: inline-block;
+    vertical-align: middle;
+    box-shadow: #0056b3 4px 3px 2px;
+}
+
+/* Стиль для кнопки добавления новости */
+.news-form button {
+    padding: 12px 24px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: background-color 0.2s ease, transform 0.1s ease-in-out;
+}
+
+.news-form button:hover {
+    background-color: #1565c0;
+    transform: scale(1.05);
+}
+
+.news-form button:active {
+    transform: scale(1);
+}
+
+/* Стиль для заголовков */
+.news-page h3 {
+    font-size: 26px;
+    margin-bottom: 16px;
+    color: #222;
+    text-align: center; /* Центрирует текст */
+}
+
+.news-page h2 {
+    font-size: 48px;
+}
+
+/* Стиль для архива новостей */
+.news-archive {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.news-item {
+    background-color: #f9f9f9;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: box-shadow 0.2s ease;
+}
+
+.news-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.news-item h4 {
+    font-size: 20px;
+    margin: 0;
+    color: #333;
+}
+
+.news-item p {
+    font-size: 15px;
+    color: #444;
+}
+
+.news-item img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.news-item small {
+    color: #666;
+    font-size: 13px;
+}
+
+.news-item button {
+    padding: 8px 16px;
+    background-color: #e53935;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    align-self: flex-end;
+    transition: background-color 0.2s ease, transform 0.1s ease-in-out;
+}
+
+.news-item button:hover {
+    background-color: #c62828;
+    transform: scale(1.05);
+}
+
+.news-item button:active {
+    transform: scale(1);
+}

@@ -5,6 +5,7 @@ import AdminPage from './pages/AdminPage';
 import StudentPage from './pages/StudentPage';
 import DutyManager from './pages/DutyManager';
 import UsersPage from "./pages/UsersPage";
+import NewsPage from './pages/NewsPage';
 
 const App = () => {
     return (
@@ -14,9 +15,9 @@ const App = () => {
                 <Route path="/student" element={<StudentPage />} />
                 <Route path="/" element={<LoginPage />} />
                 <Route path="/admin" element={<AdminPage />}>
-
                     <Route path="duty-manager" element={<DutyManager />} />
                     <Route path="users" element={<UsersPage />} />
+                    <Route path="news" element={<NewsPage />} />
                 </Route>
             </Routes>
         </Router>
