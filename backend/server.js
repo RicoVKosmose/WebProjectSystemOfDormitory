@@ -435,6 +435,60 @@
         });
     });
 
+    // Маршрут для получения всех мероприятий
+    app.get('/api/events', (req, res) => {
+        const query = 'SELECT * FROM db.events ORDER BY created_at DESC';
+        db.query(query, (err, results) => {
+            if (err) {
+                console.error('Ошибка при получении мероприятий:', err);
+                return res.status(500).send('Ошибка при получении мероприятий');
+            }
+            res.json(results);
+        });
+    });
+
+    // Маршрут для добавления нового мероприятия
+    app.post('/api/add-event', (req, res) => {
+        const { title, description, date, time } = req.body;
+        const query = 'INSERT INTO db.events (title, description, date, time) VALUES (?, ?, ?, ?)';
+
+        db.query(query, [title, description, date, time], (err, result) => {
+            if (err) {
+                console.error('Ошибка при добавлении мероприятия:', err);
+                return res.status(500).send('Ошибка при добавлении мероприятия');
+            }
+            res.status(201).send('Мероприятие добавлено');
+        });
+    });
+
+    // Маршрут для удаления мероприятия по ID
+    app.delete('/api/events/:id', (req, res) => {
+        const { id } = req.params;
+        const query = 'DELETE FROM db.events WHERE id = ?';
+
+        db.query(query, [id], (err, result) => {
+            if (err) {
+                console.error('Ошибка при удалении мероприятия:', err);
+                return res.status(500).send('Ошибка при удалении мероприятия');
+            }
+            res.send('Мероприятие удалено');
+        });
+    });
+
+    // Маршрут для обновления мероприятия
+    app.put('/api/events/:id', (req, res) => {
+        const { id } = req.params;
+        const { title, description, date, time } = req.body;
+        const query = 'UPDATE db.events SET title = ?, description = ?, date = ?, time = ? WHERE id = ?';
+
+        db.query(query, [title, description, date, time, id], (err, result) => {
+            if (err) {
+                console.error('Ошибка при обновлении мероприятия:', err);
+                return res.status(500).send('Ошибка при обновлении мероприятия');
+            }
+            res.send('Мероприятие обновлено');
+        });
+    });
 
     // 🚀
     app.listen(3001, () => {

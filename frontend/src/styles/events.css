@@ -1,0 +1,122 @@
+/* Основные стили */
+:root {
+    --primary-color: #1976d2;
+    --primary-hover-color: #1565c0;
+    --danger-color: #e53935;
+    --danger-hover-color: #c62828;
+    --background-color: #f9f9f9;
+    --border-color: #ccc;
+    --font-size-base: 16px;
+    --border-radius: 8px;
+}
+
+/* Страница мероприятий */
+.events-page {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f1f1f1;
+}
+
+.events-page h3 {
+    text-align: center;
+    font-size: 24px;
+    margin: 30px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Форма добавления мероприятия */
+.events-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 600px;
+    margin: 0 auto 40px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.events-form input,
+.events-form textarea {
+    padding: 12px 16px;
+    font-size: var(--font-size-base);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: border-color 0.2s ease;
+}
+
+.events-form input:focus,
+.events-form textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+/* Кнопка добавления */
+.events-form button {
+    padding: 12px 24px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-weight: bold;
+}
+
+.events-form button:hover {
+    background-color: var(--primary-hover-color);
+}
+
+/* Архив мероприятий */
+.events-archive {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Заголовок для архива */
+.events-header {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    padding: 10px 0;
+    border-bottom: 2px solid var(--border-color);
+    background-color: #fff;
+}
+
+/* Элементы архива */
+.event-item {
+    display: flex;
+    justify-content: space-around;
+    padding: 12px;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Кнопка удаления */
+.event-item button {
+    padding: 6px 12px;
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.event-item button:hover {
+    background-color: var(--danger-hover-color);
+}
+
