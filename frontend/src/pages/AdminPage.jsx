@@ -52,7 +52,7 @@ const AdminPage = () => {
                     <button onClick={() => navigate('/admin/requests')}>Заявки</button>
                     <button onClick={() => navigate('/admin/events')}>Мероприятия</button>
                     <button onClick={() => navigate('/admin/duty-manager')}>Кухонное дежурство</button>
-                    <button onClick={() => navigate('/admin/work-hours')}>Отработанные часы</button>
+                    <button onClick={() => navigate('/admin/workedhours')}>Отработанные часы</button>
                     <button onClick={handleLogout}>Выйти</button>
                 </aside>
 

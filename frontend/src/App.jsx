@@ -7,6 +7,7 @@ import DutyManager from './pages/DutyManager';
 import UsersPage from "./pages/UsersPage";
 import NewsPage from './pages/NewsPage';
 import EventPage from './pages/EventsPage';
+import WorkedHoursPage from "./pages/WorkedHoursPage";
 
 const App = () => {
     return (
@@ -20,6 +21,7 @@ const App = () => {
                     <Route path="users" element={<UsersPage />} />
                     <Route path="news" element={<NewsPage />} />
                     <Route path="events" element={<EventPage />} />
+                    <Route path="workedhours" element={<WorkedHoursPage />} />
                 </Route>
             </Routes>
         </Router>

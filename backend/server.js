@@ -490,6 +490,93 @@
         });
     });
 
+    // Получить всех студентов с часами
+    app.get('/api/worked-hours', (req, res) => {
+        const query = `
+            SELECT
+                s.id AS student_id, s.last_name, s.name, s.patronymic, s.block, s.room, s.flooredge,
+                IFNULL(w.hours, 0) AS hours, IFNULL(w.description, '') AS description
+            FROM db.students s
+                     LEFT JOIN db.worked_hours w ON s.id = w.student_id
+        `;
+        db.query(query, (err, result) => {
+            if (err) {
+                console.error('Ошибка при получении сведений:', err);
+                return res.status(500).send('Ошибка при получении сведений');
+            }
+            res.json(result);
+        });
+    });
+
+
+    // Добавить или обновить часы
+    // Добавить или обновить часы
+    app.post('/api/worked-hours/update', (req, res) => {
+        const { student_id, delta, description } = req.body;
+
+        const selectQuery = 'SELECT * FROM db.worked_hours WHERE student_id = ?';
+        db.query(selectQuery, [student_id], (err, rows) => {
+            if (err) return res.status(500).send('Ошибка при проверке записи');
+
+            if (rows.length === 0) {
+                // Если записи нет — создаём новую
+                const insertQuery = 'INSERT INTO db.worked_hours (student_id, hours, description) VALUES (?, ?, ?)';
+                db.query(insertQuery, [student_id, delta, description], (err2) => {
+                    if (err2) return res.status(500).send('Ошибка при добавлении записи');
+                    res.send('Запись добавлена');
+                });
+            } else {
+                // Если запись уже есть — обновляем
+                const currentHours = rows[0].hours;
+                const newHours = currentHours + delta;  // Добавляем или отнимаем часы
+                const newDescription = rows[0].description + '\n' + description;  // Добавляем новое описание
+
+                const updateQuery = 'UPDATE db.worked_hours SET hours = ?, description = ? WHERE student_id = ?';
+                db.query(updateQuery, [newHours, newDescription, student_id], (err3) => {
+                    if (err3) return res.status(500).send('Ошибка при обновлении записи');
+                    res.send('Запись обновлена');
+                });
+            }
+        });
+    });
+
+    // Очистить описание у студента
+    app.post('/api/worked-hours/clear-description', (req, res) => {
+        const { student_id } = req.body;
+
+        const updateQuery = 'UPDATE db.worked_hours SET description = ? WHERE student_id = ?';
+        db.query(updateQuery, ['', student_id], (err) => {
+            if (err) return res.status(500).send('Ошибка при очистке описания');
+            res.send('Описание очищено');
+        });
+    });
+
+    // Очистить все часы у всех студентов
+    app.post('/api/worked-hours/clear-all', (req, res) => {
+        const clearQuery = "UPDATE db.worked_hours SET hours = 0, description = ''";
+        db.query(clearQuery, (err) => {
+            if (err) {
+                console.error('Ошибка при очистке данных:', err);
+                return res.status(500).send('Ошибка при очистке данных');
+            }
+            res.send('Все часы и описания успешно очищены');
+        });
+    });
+
+    // Уменьшить часы у студентов с 25+ часами
+    app.post('/api/worked-hours/reduce-over-25', (req, res) => {
+        const updateQuery = `
+        UPDATE db.worked_hours
+        SET hours = hours - 24
+        WHERE hours >= 25
+    `;
+        db.query(updateQuery, (err) => {
+            if (err) return res.status(500).send('Ошибка при уменьшении часов');
+            res.send('Часы у студентов с 25+ часами уменьшены');
+        });
+    });
+
+
     // 🚀
     app.listen(3001, () => {
         console.log("✅ Сервер запущен: http://localhost:3001");
