@@ -8,6 +8,7 @@ import UsersPage from "./pages/UsersPage";
 import NewsPage from './pages/NewsPage';
 import EventPage from './pages/EventsPage';
 import WorkedHoursPage from "./pages/WorkedHoursPage";
+import RequestsPage from "./pages/RequestsPage";
 
 const App = () => {
     return (
@@ -22,6 +23,7 @@ const App = () => {
                     <Route path="news" element={<NewsPage />} />
                     <Route path="events" element={<EventPage />} />
                     <Route path="workedhours" element={<WorkedHoursPage />} />
+                    <Route path="requests" element={<RequestsPage />} />
                 </Route>
             </Routes>
         </Router>

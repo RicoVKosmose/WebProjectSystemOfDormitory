@@ -576,6 +576,75 @@
         });
     });
 
+    app.post('/api/repair-request', (req, res) => {
+        const userId = req.session.userId;
+        const { description } = req.body;
+
+        if (!userId) {
+            return res.status(401).json({ message: 'Не авторизован' });
+        }
+
+        if (!description || description.trim() === '') {
+            return res.status(400).json({ message: 'Описание не может быть пустым' });
+        }
+
+        const sql = 'INSERT INTO db.repair_requests (user_id, description) VALUES (?, ?)';
+        connection.query(sql, [userId, description], (err, result) => {
+            if (err) {
+                console.error('Ошибка при добавлении заявки:', err);
+                return res.status(500).json({ message: 'Ошибка сервера' });
+            }
+
+            res.status(200).json({ message: 'Заявка успешно отправлена' });
+        });
+    });
+
+    app.get('/api/repair-requests', (req, res) => {
+        const sql = `
+    SELECT 
+      s.last_name, s.name, s.patronymic,
+      s.block, s.room, s.flooredge,
+      r.description, r.status, r.created_at, r.id as request_id
+    FROM db.repair_requests r
+    JOIN db.students s ON r.user_id = s.user_id
+    ORDER BY r.created_at DESC
+  `;
+        db.query(sql, (err, results) => {
+            if (err) return res.status(500).json({ error: err });
+            res.json(results);
+        });
+    });
+
+    app.put('/api/update-request-status/:id', (req, res) => {
+        const { status } = req.body;
+        const { id } = req.params;
+        const sql = `UPDATE db.repair_requests SET status = ? WHERE id = ?`;
+        db.query(sql, [status, id], (err) => {
+            if (err) return res.status(500).json({ error: err });
+            res.sendStatus(200);
+        });
+    });
+
+    // Маршрут для удаления заявки
+    app.delete('/api/delete-request/:id', (req, res) => {
+        const { id } = req.params;
+
+        const sql = 'DELETE FROM db.repair_requests WHERE id = ?';
+        db.query(sql, [id], (err, result) => {
+            if (err) {
+                console.error('Ошибка при удалении заявки:', err);
+                return res.status(500).json({ message: 'Ошибка сервера при удалении заявки' });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Заявка не найдена' });
+            }
+
+            res.status(200).json({ message: 'Заявка удалена успешно' });
+        });
+    });
+
+
 
     // 🚀
     app.listen(3001, () => {

@@ -1,0 +1,134 @@
+/* Requests.css */
+
+.requests-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.requests-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333333;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.requests-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.requests-table thead {
+    background-color: #007bff;
+}
+
+.requests-table th,
+.requests-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: middle;
+}
+
+.requests-table thead th {
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 13px;
+    padding: 12px 15px;
+    transition: background-color 0.3s, color 0.3s; /* Плавный переход */
+}
+
+.requests-table th {
+    color: #555555;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+.requests-table thead th:hover {
+    background-color: white; /* Белый фон */
+    color: #007bff; /* Синий текст */
+}
+
+.status-select {
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.status-select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Статусные бейджи */
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    text-align: center;
+    min-width: 100px;
+}
+
+/* Цвета по статусу */
+.status-pending {
+    background-color: #ff9800; /* оранжевый */
+}
+
+.status-in-progress {
+    background-color: #2196f3; /* синий */
+}
+
+.status-completed {
+    background-color: #4caf50; /* зелёный */
+}
+
+.requests-table th {
+    cursor: pointer;
+}
+
+.requests-table th:hover {
+    background-color: #f1f1f1;
+}
+
+.requests-table th.sorted-ascending::after {
+    content: " ↑";
+}
+
+.requests-table th.sorted-descending::after {
+    content: " ↓";
+}
+
+
+.delete-button {
+    padding: 6px 12px; /* Уменьшаем отступы */
+    font-size: 12px; /* Уменьшаем размер шрифта */
+    border-radius: 6px; /* Радиус скругления */
+    background-color: #f44336; /* Красный фон */
+    color: white; /* Белый цвет текста */
+    border: none; /* Убираем рамку */
+    cursor: pointer; /* Курсор в виде указателя */
+    transition: background-color 0.3s ease; /* Плавное изменение фона */
+}
+
+.delete-button:hover {
+    background-color: #d32f2f; /* Тёмно-красный цвет при наведении */
+}

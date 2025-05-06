@@ -15,13 +15,18 @@ body {
 
 /* === Шапка === */
 header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 40px;
-    background-color: rgba(255, 255, 255, 0.95);
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 25px;
+    padding: 0 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
 
 header a {
@@ -30,6 +35,10 @@ header a {
     color: #333;
     font-weight: bold;
     transition: color 0.2s;
+}
+
+header a:last-child {
+    margin-right: 0;
 }
 
 header a:hover {
@@ -41,6 +50,11 @@ header div:last-child {
     color: #555;
 }
 
+#datetime {
+    font-weight: bold;
+    font-size: 16px;
+    color: #0056b3;
+}
 
 /* === Сетка блоков === */
 .dashboard {
@@ -48,7 +62,7 @@ header div:last-child {
     grid-template-areas:
     "news events info"
     "news request payment";
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr; /* немного уменьшил events */
     grid-template-rows: auto auto;
     gap: 20px;
     padding: 0 40px 40px;
@@ -65,11 +79,12 @@ header div:last-child {
 }
 
 /* Индивидуальные области */
-.news    { grid-area: news; height: 83vh; }
-.events  { grid-area: events; }
+.news    { grid-area: news; height: 90vh; overflow-y: auto; }
+.events  { grid-area: events; max-height: 400px; overflow-y: auto; }
 .info    { grid-area: info; }
 .request { grid-area: request; }
 .payment { grid-area: payment; }
+
 
 .card h2 {
     font-size: 18px;
@@ -87,12 +102,14 @@ header div:last-child {
 
 /* === Заявка === */
 textarea {
+    resize: none;
     width: 100%;
+    height: 75%;
     padding: 10px;
     margin: 10px 0 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
-    resize: vertical;
+
     font-family: inherit;
     font-size: 14px;
 }
@@ -113,28 +130,77 @@ button:hover {
     background-color: #0056b3;
 }
 
-/* === Картинка QR === */
-.qr {
-    align-self: center;
-    height: auto;
-    display: block;
-    margin: 12px 0;
-    max-width: 150px;
-}
-
+/* === Дежурство на кухне === */
 .duty-schedule {
     grid-area: info;
 }
 
 .duty-image {
     width: 100%;
-    max-height: 300px;
+    max-height: 200px; /* уменьшил картинку дежурства */
     object-fit: contain;
     border-radius: 8px;
     border: 1px solid #ccc;
     margin-top: 10px;
 }
 
+/* Стили для блока "Мероприятия" */
+.card.events .event-item {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+
+.card.events .event-item p {
+    margin: 5px 0;
+}
+
+.card.events .event-item strong {
+    color: #2a5885;
+}
+
+/* Стили для блока новостей */
+.card.news h2 {
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+    color: #333333;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.news-item {
+    margin-bottom: 20px;
+}
+
+.news-item p {
+    margin: 5px 0;
+    color: #333;
+    line-height: 1.4;
+}
+
+.news-item strong {
+    color: #007bff;
+}
+
+.news-image {
+    width: 100%;
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-top: 8px;
+}
+
+.news-item hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin-top: 15px;
+}
+
+main.dashboard {
+    padding-top: 100px; /* высота шапки + запас */
+}
 
 /* === Адаптивность === */
 @media (max-width: 900px) {
@@ -148,4 +214,116 @@ button:hover {
         grid-template-columns: 1fr;
         padding: 0 20px 30px;
     }
+}
+
+/* Стили для модального окна */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 90%;
+    height: 90%;
+    max-height: 90%;
+    overflow: hidden;
+    background: #689CD2;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Изображение сохраняет пропорции, полностью помещается в окно */
+    object-position: center; /* Центрирует изображение внутри окна */
+}
+
+/* Стили для кнопки закрытия */
+.close-button {
+    position: absolute;
+    top: -5px;
+    right: 10px;
+    background: linear-gradient(145deg, #ff5858, #ff2a2a); /* Градиентный фон */
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    width: 35px; /* Немного увеличим размер */
+    height: 35px; /* Немного увеличим размер */
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Мягкая тень */
+    transition: all 0.3s ease; /* Плавный переход */
+}
+
+.close-button:hover {
+    background: linear-gradient(145deg, #ff2a2a, #ff5858); /* Плавная смена цвета */
+    transform: scale(1.1); /* Увеличение кнопки при наведении */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Увеличение тени при наведении */
+}
+
+.close-button:focus {
+    outline: none; /* Убираем стандартную обводку при фокусе */
+}
+
+.close-button::before {
+    content: "×"; /* Используем символ × */
+    font-size: 30px;
+    line-height: 30px;
+    font-weight: bold;
+}
+
+.toast {
+    position: fixed;
+    bottom: 150px;
+    left: 42%;
+    background-color: rgba(0, 0, 0, 0.7); /* По умолчанию черный */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    z-index: 1000;
+    opacity: 0.9;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    visibility: hidden; /* Скрыто по умолчанию */
+
+}
+
+.toast.show {
+    visibility: visible;
+    transform: translateY(0); /* Возвращаем элемент на место */
+}
+
+.toast.hide {
+    opacity: 0;
+}
+
+/* Цвета для типов уведомлений */
+.toast.success {
+    background-color: #4caf50; /* Зеленый для успеха */
+}
+
+.toast.error {
+    background-color: #f44336; /* Красный для ошибки */
+}
+
+.toast.info {
+    background-color: #2196f3; /* Синий для информации */
 }
