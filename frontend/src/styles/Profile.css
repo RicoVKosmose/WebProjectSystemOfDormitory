@@ -1,0 +1,133 @@
+.profile-page {
+    padding: 20px;
+}
+
+/* Чтобы блоки не залазили под шапку */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px; /* Добавляем отступ снизу шапки */
+}
+
+#datetime {
+    font-size: 1rem;
+    color: #333;
+}
+
+.profile-button {
+    margin-right: 20px;
+    background: none;
+    border: none;
+    color: #333;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.profile-button:hover {
+    background: #007bff;
+    color: white;
+}
+
+.profile-container {
+    display: flex;
+    gap: 30px;
+    margin-top: 70px;
+    justify-content: space-between;
+}
+
+/* Левая колонка — информация */
+.profile-info {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    border: 1px solid #ddd;
+}
+
+/* Стиль текста в информации */
+.profile-info h2 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.profile-info p {
+    margin-bottom: 9px; /* Интервал между строками */
+    line-height: 1.5; /* Межстрочный интервал */
+    font-size: 0.95rem;
+    color: #444;
+}
+
+/* Правая колонка */
+.profile-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Аватар и пароль блоки */
+.profile-avatar, .profile-password {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+}
+
+/* Центровка аватарки внутри блока */
+.profile-avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-avatar img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Поля ввода пароля */
+.password-change input {
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+
+.password-change button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.password-change button:hover {
+    background-color: #0056b3;
+}
+
+/* Дополнительно — убрать дублирующийся стиль */
+.avatar {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.avatar img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+

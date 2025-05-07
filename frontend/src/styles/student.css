@@ -29,13 +29,25 @@ header {
     z-index: 1000;
 }
 
-header a {
+header button.profile-button {
     margin-right: 20px;
-    text-decoration: none;
+    margin-bottom: 12px;
+    background: none;
+    border: none;
     color: #333;
     font-weight: bold;
-    transition: color 0.2s;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.2s, transform 0.3s;
+    cursor: pointer;
 }
+
+header button.profile-button:hover {
+    background: #007bff;
+    color: white;  /* Цвет при наведении */
+    transform: scale(1.05); /* Легкое увеличение при наведении */
+}
+
 
 header a:last-child {
     margin-right: 0;

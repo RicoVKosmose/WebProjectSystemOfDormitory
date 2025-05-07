@@ -61,19 +61,25 @@
     });
 
 
-    // 🔐 Вход
+    // 🔐 Входno
+
     app.post("/login", (req, res) => {
         const { login, password } = req.body;
-        db.query("SELECT * FROM db.users WHERE Login = ?", [login], (err, results) => {
+        db.query("SELECT * FROM db.users WHERE Login = ?", [login], async (err, results) => {
             if (err) return res.status(500).json({ error: "Ошибка сервера" });
             if (results.length === 0) return res.status(400).json({ error: "Пользователь не найден" });
+
             const user = results[0];
-            if (user.password !== password) return res.status(401).json({ error: "Неверный пароль" });
+
+            // Сравнение введённого пароля с хэшом в базе
+            const match = await bcrypt.compare(password, user.password);
+            if (!match) return res.status(401).json({ error: "Неверный пароль" });
 
             req.session.userId = user.idUsers;
             res.json({ message: "Успешный вход", role: user.role });
         });
     });
+
 
     // 👤 Получение профиля
     app.get("/api/student-profile", (req, res) => {
@@ -85,19 +91,6 @@
             if (results.length === 0) return res.status(404).json({ error: "Студент не найден" });
 
             res.json(results[0]);
-        });
-    });
-
-    // 📤 Загрузка аватара
-    app.post("/api/upload-avatar", upload.single("avatar"), (req, res) => {
-        const userId = req.session.userId;
-        if (!userId) return res.status(401).json({ error: "Не авторизован" });
-
-        const filename = req.file.filename;
-
-        db.query("UPDATE db.students SET avatar = ? WHERE user_id = ?", [filename, userId], (err) => {
-            if (err) return res.status(500).json({ error: "Ошибка при сохранении" });
-            res.json({ message: "Аватар загружен", avatar: filename });
         });
     });
 
@@ -508,8 +501,6 @@
         });
     });
 
-
-    // Добавить или обновить часы
     // Добавить или обновить часы
     app.post('/api/worked-hours/update', (req, res) => {
         const { student_id, delta, description } = req.body;
@@ -641,6 +632,83 @@
             }
 
             res.status(200).json({ message: 'Заявка удалена успешно' });
+        });
+    });
+
+    const avatarStorage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, "public/uploads/avatars");
+        },
+        filename: (req, file, cb) => {
+            const ext = path.extname(file.originalname);
+            cb(null, `avatar-${Date.now()}${ext}`);
+        }
+    });
+    const uploadAvatar = multer({ storage: avatarStorage });
+    app.use('/uploads/avatars', express.static(path.join(__dirname, 'public/uploads/avatars')));
+
+
+    // Загрузка аватара
+    app.post('/api/upload-avatar', uploadAvatar.single('avatar'), (req, res) => {
+        const userId = req.session.userId;
+        const avatarPath = req.file.filename;
+
+        const sql = 'UPDATE db.students SET avatar = ? WHERE user_id = ?';
+        db.query(sql, [avatarPath, userId], (err, result) => {
+            if (err) {
+                console.error('Ошибка загрузки аватара:', err);
+                return res.status(500).json({ error: 'Ошибка при загрузке аватара' });
+            }
+            res.json({ avatar: avatarPath });
+        });
+    });
+
+
+    // Изменение пароля
+    app.post('/api/change-password', (req, res) => {
+        const { newPassword } = req.body;
+        const userId = req.session.userId;
+
+        bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
+            if (err) {
+                console.error('Ошибка при хешировании пароля:', err);
+                return res.status(500).json({ error: 'Ошибка при изменении пароля' });
+            }
+
+            const sql = 'UPDATE db.users SET password = ? WHERE idUsers = ?';
+            db.query(sql, [hashedPassword, userId], (err2, result) => {
+                if (err2) {
+                    console.error('Ошибка при обновлении пароля:', err2);
+                    return res.status(500).json({ error: 'Ошибка при изменении пароля' });
+                }
+                res.json({ message: 'Пароль успешно изменен' });
+            });
+        });
+    });
+
+    app.get('/api/user-profile', (req, res) => {
+        const userId = req.session.userId;
+
+        if (!userId) {
+            return res.status(401).json({ message: 'Пользователь не авторизован' });
+        }
+
+        const sql = `
+            SELECT u.idUsers, u.Login, u.role, s.name, s.last_name, s.patronymic, s.birth_date, s.phone, s.email, s.address, s.university, s.faculty, s.group_name, s.block, s.room, s.number_ticket, s.avatar, s.floor, s.flooredge
+            FROM db.users u
+                     LEFT JOIN db.students s ON u.idUsers = s.user_id
+            WHERE u.idUsers = ?
+        `;
+
+        db.query(sql, [userId], (err, result) => {
+            if (err) {
+                console.error('Ошибка запроса:', err);
+                return res.status(500).json({ error: 'Ошибка при запросе данных' });
+            }
+            if (result.length === 0) {
+                return res.status(404).json({ message: 'Профиль не найден' });
+            }
+            res.json(result[0]); // Отправляем профиль одного пользователя
         });
     });
 

@@ -40,7 +40,7 @@ const AdminPage = () => {
             <header>
                 <div>
                     <a href="/admin">Главная</a>
-                    <a href="#">Настройки</a>
+                    <a href="/profile">Мой профиль</a>
                 </div>
                 <div id="datetime">{currentDateTime}</div>
             </header>

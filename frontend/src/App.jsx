@@ -9,6 +9,8 @@ import NewsPage from './pages/NewsPage';
 import EventPage from './pages/EventsPage';
 import WorkedHoursPage from "./pages/WorkedHoursPage";
 import RequestsPage from "./pages/RequestsPage";
+import WorkerPage from "./pages/WorkerPage";
+import Profile from './pages/Profile';
 
 const App = () => {
     return (
@@ -16,6 +18,8 @@ const App = () => {
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/student" element={<StudentPage />} />
+                <Route path="/worker" element={<WorkerPage />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/" element={<LoginPage />} />
                 <Route path="/admin" element={<AdminPage />}>
                     <Route path="duty-manager" element={<DutyManager />} />

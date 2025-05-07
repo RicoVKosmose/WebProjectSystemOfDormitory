@@ -143,12 +143,11 @@ const StudentPage = () => {
         <div>
             <header>
                 <div>
-                    <a href="#">Мой профиль</a>
-                    <a href="#">Уведомления</a>
-                    <a href="#">Контакты</a>
+                    <button className="profile-button" onClick={() => navigate('/profile')}>Мой профиль</button>
                 </div>
                 <div id="datetime">{currentDateTime}</div>
             </header>
+
 
             <main className="dashboard">
                 <div className="card news">
@@ -248,7 +247,7 @@ const StudentPage = () => {
 
                 <div className="card payment">
                     <h2>Оплата общежития</h2>
-                    <p><b>М-Банкинг:</b> ЕРИП -> Образование и развитие -> Высшее образование -> Брест -> БрГТУ -> Общежитие</p>
+                    <p><b>М-Банкинг:</b> ЕРИП - Образование и развитие - Высшее образование - Брест - БрГТУ - Общежитие</p>
                     <p><b>Код услуги:</b> 5182</p>
                     <p><b>Стоимость оплаты за общежития БрГТУ:</b></p>
                     <p>Общежитие №1 — 16,00 руб. (0,4 баз.вел.)</p>
