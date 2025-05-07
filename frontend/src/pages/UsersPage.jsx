@@ -37,6 +37,12 @@ const UsersPage = () => {
 
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
+    const formatDate = (isoDate) => {
+        if (!isoDate) return '';
+        const date = new Date(isoDate);
+        return date.toLocaleDateString('ru-RU'); // формат: дд.мм.гггг
+    };
+
     const fetchUsers = async () => {
         try {
             const res = await fetch('http://localhost:3001/api/users');
@@ -55,6 +61,26 @@ const UsersPage = () => {
     useEffect(() => {
         fetchUsers();
     }, []);
+
+    const fieldPlaceholders = {
+        name: 'Имя',
+        last_name: 'Фамилия',
+        patronymic: 'Отчество',
+        birth_date: 'Дата рождения',
+        phone: 'Телефон',
+        email: 'Электронная почта',
+        address: 'Адрес',
+        university: 'Университет',
+        faculty: 'Факультет',
+        group_name: 'Группа',
+        block: 'Блок',
+        room: 'Комната',
+        number_ticket: 'Номер студенческого билета',
+        avatar: 'Ссылка на аватар',
+        floor: 'Этаж',
+        flooredge: 'Крыло'
+    };
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -249,22 +275,23 @@ const UsersPage = () => {
 
                     <h3>Данные студента</h3>
                     {Object.keys(emptyForm.studentData).map((key) =>
-                        key === 'flooredge' ? (
-                            <select name={key} value={formData.studentData[key]} onChange={handleChange} key={key}>
-                                <option value="left">Левое крыло</option>
-                                <option value="right">Правое крыло</option>
-                            </select>
-                        ) : (
-                            <input
-                                key={key}
-                                name={key}
-                                type={['birth_date', 'block', 'room', 'number_ticket', 'floor'].includes(key) ? (key === 'birth_date' ? 'date' : 'number') : 'text'}
-                                value={formData.studentData[key]}
-                                onChange={handleChange}
-                                placeholder={key}
-                            />
-                        )
-                    )}
+                    key === 'flooredge' ? (
+                        <select name={key} value={formData.studentData[key]} onChange={handleChange} key={key}>
+                            <option value="left">Левое крыло</option>
+                            <option value="right">Правое крыло</option>
+                        </select>
+                    ) : (
+                        <input
+                            key={key}
+                            name={key}
+                            type={key === 'birth_date' ? 'date' : (['block', 'room', 'number_ticket', 'floor'].includes(key) ? 'number' : 'text')}
+                            value={formData.studentData[key]}
+                            onChange={handleChange}
+                            placeholder={fieldPlaceholders[key] || key}
+                        />
+                    )
+                )}
+
 
                     <button type="submit">{isEditMode ? 'Сохранить изменения' : 'Добавить пользователя'}</button>
                 </form>
@@ -297,7 +324,7 @@ const UsersPage = () => {
                 {filteredUsers.map(user => (
                     <tr key={user.idUsers} className={selectedUserId === user.idUsers ? 'selected-row' : ''} onClick={() => setSelectedUserId(user.idUsers)}>
                         <td>{user.Login}</td><td>{user.role}</td><td>{user.name}</td><td>{user.last_name}</td><td>{user.patronymic}</td>
-                        <td>{user.birth_date}</td><td>{user.phone}</td><td>{user.email}</td><td>{user.address}</td><td>{user.university}</td>
+                        <td>{formatDate(user.birth_date)}</td><td>{user.phone}</td><td>{user.email}</td><td>{user.address}</td><td>{user.university}</td>
                         <td>{user.faculty}</td><td>{user.group_name}</td><td>{user.block}</td><td>{user.room}</td><td>{user.number_ticket}</td>
                         <td>{user.avatar ? <img src={`http://localhost:3001/uploads/avatars/${user.avatar}`} alt="avatar" className="avatar-img" /> : 'Нет фото'}</td>
 

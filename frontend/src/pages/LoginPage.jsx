@@ -40,35 +40,53 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="login-container">
-            <h2>Вход в систему</h2>
-            <form id="login-form" onSubmit={handleSubmit}>
-                <label htmlFor="login">Логин:</label>
-                <input
-                    type="text"
-                    id="login"
-                    placeholder="Введите логин"
-                    value={login}
-                    onChange={(e) => setLogin(e.target.value)}
-                    required
-                />
-                <label htmlFor="password">Пароль:</label>
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Введите пароль"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-                <button type="submit">Войти</button>
-            </form>
-            {message && (
-                <div className="error-message">
-                    <span className="error-icon">⚠️</span>
-                    {message}
-                </div>)}
+        <div
+            style={{
+                backgroundImage: "url('/images/fon_login.jpg')",
+                backgroundSize: 'cover', // Заполнит весь экран
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                minHeight: '100vh',
+                width: '100vw',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundAttachment: 'fixed', // Сделает фон зафиксированным
+            }}
+        >
+            <div className="login-container">
+                <h2>Вход в систему</h2>
+                <form id="login-form" onSubmit={handleSubmit}>
+                    <label htmlFor="login">Логин:</label>
+                    <input
+                        type="text"
+                        id="login"
+                        placeholder="Введите логин"
+                        value={login}
+                        onChange={(e) => setLogin(e.target.value)}
+                        required
+                    />
+                    <label htmlFor="password">Пароль:</label>
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Введите пароль"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                    <button type="submit">Войти</button>
+                </form>
+                {message && (
+                    <div className="error-message">
+                        <span className="error-icon">⚠️</span>
+                        {message}
+                    </div>)}
+            </div>
         </div>
+
+
+
     );
 };
 

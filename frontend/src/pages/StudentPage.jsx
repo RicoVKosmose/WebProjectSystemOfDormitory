@@ -257,7 +257,6 @@ const StudentPage = () => {
                     <button className="logout" onClick={handleLogout}>Выйти</button>
                 </div>
             </main>
-
         </div>
     );
 };

@@ -571,40 +571,59 @@
         const userId = req.session.userId;
         const { description } = req.body;
 
+        console.log('Получены данные запроса:', req.body);  // Логируем данные, полученные от клиента
+        console.log('ID пользователя:', userId);  // Логируем ID пользователя из сессии
+
         if (!userId) {
+            console.log('Пользователь не авторизован');
             return res.status(401).json({ message: 'Не авторизован' });
         }
 
         if (!description || description.trim() === '') {
+            console.log('Описание пустое');
             return res.status(400).json({ message: 'Описание не может быть пустым' });
         }
 
         const sql = 'INSERT INTO db.repair_requests (user_id, description) VALUES (?, ?)';
-        connection.query(sql, [userId, description], (err, result) => {
+        db.query(sql, [userId, description], (err, result) => {
             if (err) {
-                console.error('Ошибка при добавлении заявки:', err);
+                console.error('Ошибка при добавлении заявки:', err);  // Логируем ошибку SQL-запроса
                 return res.status(500).json({ message: 'Ошибка сервера' });
             }
 
+            console.log('Заявка успешно добавлена');
             res.status(200).json({ message: 'Заявка успешно отправлена' });
         });
     });
 
+
+
     app.get('/api/repair-requests', (req, res) => {
+        console.log('Получен запрос на получение заявок на ремонт');
+
         const sql = `
-    SELECT 
-      s.last_name, s.name, s.patronymic,
-      s.block, s.room, s.flooredge,
-      r.description, r.status, r.created_at, r.id as request_id
-    FROM db.repair_requests r
-    JOIN db.students s ON r.user_id = s.user_id
-    ORDER BY r.created_at DESC
-  `;
+            SELECT
+                s.last_name, s.name, s.patronymic,
+                s.block, s.room, s.flooredge,
+                r.description, r.status, r.created_at, r.id as request_id
+            FROM db.repair_requests r
+                     JOIN db.students s ON r.user_id = s.user_id
+            ORDER BY r.created_at DESC
+        `;
+
+        console.log('SQL запрос:', sql); // Логируем SQL-запрос
+
         db.query(sql, (err, results) => {
-            if (err) return res.status(500).json({ error: err });
+            if (err) {
+                console.error('Ошибка при выполнении запроса:', err);
+                return res.status(500).json({ error: err });
+            }
+
+            console.log('Результаты запроса:', results); // Логируем результаты запроса
             res.json(results);
         });
     });
+
 
     app.put('/api/update-request-status/:id', (req, res) => {
         const { status } = req.body;
@@ -634,6 +653,8 @@
             res.status(200).json({ message: 'Заявка удалена успешно' });
         });
     });
+
+
 
     const avatarStorage = multer.diskStorage({
         destination: (req, file, cb) => {

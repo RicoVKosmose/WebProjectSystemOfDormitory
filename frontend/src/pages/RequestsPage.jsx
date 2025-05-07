@@ -6,12 +6,20 @@ export default function RequestsPage() {
     const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
 
     useEffect(() => {
+        console.log("Загрузка заявок...");
         fetch("/api/repair-requests")
             .then((res) => res.json())
-            .then((data) => setRequests(data));
+            .then((data) => {
+                console.log("Заявки загружены:", data);
+                setRequests(data);
+            })
+            .catch((err) => {
+                console.error("Ошибка при загрузке заявок:", err);
+            });
     }, []);
 
     const updateStatus = (id, newStatus) => {
+        console.log(`Обновление статуса заявки ${id} на ${newStatus}`);
         fetch(`/api/update-request-status/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -22,10 +30,14 @@ export default function RequestsPage() {
                     req.request_id === id ? { ...req, status: newStatus } : req
                 )
             );
+            console.log(`Статус заявки ${id} обновлен на ${newStatus}`);
+        }).catch((err) => {
+            console.error(`Ошибка при обновлении статуса заявки ${id}:`, err);
         });
     };
 
     const deleteRequest = (id) => {
+        console.log(`Удаление заявки ${id}`);
         // Подтверждение перед удалением
         const confirmed = window.confirm("Вы уверены, что хотите удалить эту заявку?");
         if (!confirmed) return;
@@ -37,9 +49,13 @@ export default function RequestsPage() {
             if (res.ok) {
                 // Обновление состояния после успешного удаления
                 setRequests((prev) => prev.filter((req) => req.request_id !== id));
+                console.log(`Заявка ${id} успешно удалена`);
             } else {
+                console.error('Ошибка при удалении заявки', res);
                 alert('Ошибка при удалении заявки');
             }
+        }).catch((err) => {
+            console.error('Ошибка при удалении заявки:', err);
         });
     };
 
@@ -55,6 +71,7 @@ export default function RequestsPage() {
             return 0;
         });
 
+        console.log(`Сортировка по ${key} в ${direction} порядке`);
         setRequests(sortedRequests);
         setSortConfig({ key, direction });
     };

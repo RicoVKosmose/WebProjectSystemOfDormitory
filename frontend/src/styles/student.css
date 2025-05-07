@@ -339,3 +339,18 @@ main.dashboard {
 .toast.info {
     background-color: #2196f3; /* Синий для информации */
 }
+
+.logout {
+    background-color: #ff4d4d; /* Красный фон */
+    color: white; /* Белый цвет текста */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.logout:hover {
+    background-color: #e60000; /* Темно-красный при наведении */
+}
