@@ -299,7 +299,8 @@ const UsersPage = () => {
                         <td>{user.Login}</td><td>{user.role}</td><td>{user.name}</td><td>{user.last_name}</td><td>{user.patronymic}</td>
                         <td>{user.birth_date}</td><td>{user.phone}</td><td>{user.email}</td><td>{user.address}</td><td>{user.university}</td>
                         <td>{user.faculty}</td><td>{user.group_name}</td><td>{user.block}</td><td>{user.room}</td><td>{user.number_ticket}</td>
-                        <td>{user.avatar ? <img src={user.avatar} alt="avatar" className="avatar-img" /> : 'Нет фото'}</td>
+                        <td>{user.avatar ? <img src={`http://localhost:3001/uploads/avatars/${user.avatar}`} alt="avatar" className="avatar-img" /> : 'Нет фото'}</td>
+
                         <td>{user.floor}</td><td>{user.flooredge}</td>
                     </tr>
                 ))}
