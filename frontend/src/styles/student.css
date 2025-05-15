@@ -70,6 +70,7 @@ header div:last-child {
 
 /* === Сетка блоков === */
 .dashboard {
+    margin-top: 63px;
     display: grid;
     grid-template-areas:
     "news events info"
@@ -353,4 +354,55 @@ main.dashboard {
 
 .logout:hover {
     background-color: #e60000; /* Темно-красный при наведении */
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.admin-body {
+    flex: 1;
+    display: flex;
+    /* остальное уже есть */
+}
+
+footer {
+    width: 100%;
+    background-color: rgba(10, 120, 255, 0.8);
+    color: white;
+    text-align: center;
+    padding: 15px 20px;
+    font-size: 14px;
+    border-top: 1px solid #ccc;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 500;
+    margin-top: 0;
+}
+
+footer a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+
+footer a:hover {
+    color: gray;
+}
+
+
+#github-link {
+    color: white;
+}
+
+#github-link:hover {
+    color: black;
+}
+
+.html,body {
+    overflow-y: scroll;
 }

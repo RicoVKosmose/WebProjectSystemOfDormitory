@@ -64,7 +64,7 @@ const AdminPage = () => {
                 <footer className="admin-footer">
                     <div className="footer-content">
                         <span>© {new Date().getFullYear()} Все права защищены</span>
-                        <a href="https://github.com/RicoVKosmose" target="_blank" rel="noopener noreferrer">
+                        <a href="https://github.com/RicoVKosmose/WebProjectSystemOfDormitory" target="_blank" rel="noopener noreferrer">
                             GitHub
                         </a>
                     </div>
