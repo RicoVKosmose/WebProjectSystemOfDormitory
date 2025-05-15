@@ -60,6 +60,7 @@ const AdminPage = () => {
                     <Outlet />
                 </main>
             </div>
+
             {location.pathname === '/admin' && (
                 <footer className="admin-footer">
                     <div className="footer-content">

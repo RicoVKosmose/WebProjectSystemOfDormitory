@@ -34,8 +34,8 @@ const StudentPage = () => {
             toast.classList.add('hide');
             setTimeout(() => {
                 toast.remove();
-            }, 500); // Удаление после завершения анимации исчезновения
-        }, 3000); // Задержка перед исчезновением
+            }, 500);
+        }, 3000);
     }
 
 
@@ -257,6 +257,19 @@ const StudentPage = () => {
                     <button className="logout" onClick={handleLogout}>Выйти</button>
                 </div>
             </main>
+
+            {location.pathname === '/student' && (
+                <footer className="student-footer">
+                    <div className="footer-content">
+                        <span>© {new Date().getFullYear()} Все права защищены</span>
+                        <a href="https://github.com/RicoVKosmose/WebProjectSystemOfDormitory" target="_blank" rel="noopener noreferrer">
+                            GitHub
+                        </a>
+                    </div>
+                </footer>
+            )}
+
+
         </div>
     );
 };

@@ -70,7 +70,7 @@ header div:last-child {
 
 /* === Сетка блоков === */
 .dashboard {
-    margin-top: 63px;
+    margin-top: 75px;
     display: grid;
     grid-template-areas:
     "news events info"
@@ -368,41 +368,32 @@ main.dashboard {
     /* остальное уже есть */
 }
 
-footer {
-    width: 100%;
-    background-color: rgba(10, 120, 255, 0.8);
-    color: white;
+.student-footer {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    padding: 20px 40px;
     text-align: center;
-    padding: 15px 20px;
-    font-size: 14px;
-    border-top: 1px solid #ccc;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
-    position: relative;
-    z-index: 500;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
     margin-top: 0;
 }
 
-footer a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-    margin: 0 10px;
-    transition: color 0.3s;
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
 }
 
-footer a:hover {
-    color: gray;
-}
-
-
-#github-link {
+.footer-content a {
     color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
-#github-link:hover {
-    color: black;
+.footer-content a:hover {
+    color: #61dafb;
 }
 
-.html,body {
-    overflow-y: scroll;
+body.student-body {
+    overflow: auto;
 }

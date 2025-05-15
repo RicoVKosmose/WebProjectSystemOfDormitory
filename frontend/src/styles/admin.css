@@ -107,6 +107,7 @@ header div:last-child {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Автоматическое распределение колонок */
     gap: 10px; /* Расстояние между колонками и строками */
     margin-left: 260px; /* Учитываем ширину бокового меню */
+    margin-bottom: 40px;
     padding: 40px;
     background-image: url('/images/fon.jpg'); /* Укажите путь к изображению */
     background-size: cover; /* Масштабируем изображение, чтобы оно покрывало весь блок */
@@ -186,6 +187,10 @@ html, body {
     overflow: clip;
 }
 
+body.admin-body {
+    overflow: hidden;
+}
+
 .page-container {
     display: flex;
     flex-direction: column;
@@ -199,7 +204,7 @@ html, body {
 }
 
 .admin-footer {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
     color: #fff;
     padding: 20px 40px;
     text-align: center;
@@ -219,11 +224,11 @@ html, body {
 }
 
 .footer-content a {
-    color: #61dafb;
+    color: white;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .footer-content a:hover {
-    color: #21a1f1;
+    color: #61dafb;
 }
