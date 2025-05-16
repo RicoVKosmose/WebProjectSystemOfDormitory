@@ -13,6 +13,9 @@ const StudentPage = () => {
     const [repairMessage, setRepairMessage] = useState('');
     const [toastMessage, setToastMessage] = useState('');
     const [isToastVisible, setIsToastVisible] = useState(false);
+    const [notifications, setNotifications] = useState([]);
+    const [showNotifications, setShowNotifications] = useState(false);
+    const [totalHours, setTotalHours] = useState(0);
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -38,7 +41,17 @@ const StudentPage = () => {
         }, 3000);
     }
 
-
+    const fetchTotalHours = async (studentId) => {
+        try {
+            const res = await fetch(`http://localhost:3001/api/worked-hours/total/${studentId}`, {
+                credentials: 'include',
+            });
+            const data = await res.json();
+            setTotalHours(data.hours || 0);
+        } catch (err) {
+            console.error('Ошибка при получении общего количества часов', err);
+        }
+    };
     useEffect(() => {
         const initializeData = async () => {
             const updateDateTime = () => {
@@ -51,6 +64,30 @@ const StudentPage = () => {
                     month: '2-digit',
                     year: 'numeric'
                 }));
+            };
+
+            const fetchNotifications = async () => {
+                try {
+
+                    const resId = await fetch('http://localhost:3001/api/current-student-id', {
+                        credentials: 'include',
+                    });
+                    if (!resId.ok) throw new Error('Ошибка получения student_id');
+                    const { studentId } = await resId.json();
+                    await fetchTotalHours(studentId);
+
+                    const resNotification = await fetch(`http://localhost:3001/api/worked-hours/notifications/${studentId}`, {
+                        credentials: 'include',
+                    });
+                    if (!resNotification.ok) throw new Error('Ошибка получения уведомлений');
+                    const notificationData = await resNotification.json();
+
+
+                    console.log('Data:', notificationData);
+                    setNotifications(notificationData);
+                } catch (err) {
+                    console.error('Ошибка при загрузке уведомлений', err);
+                }
             };
 
             const fetchDutyImage = async () => {
@@ -91,13 +128,46 @@ const StudentPage = () => {
 
             updateDateTime();
             setInterval(updateDateTime, 1000);
+            await fetchNotifications();
             await fetchDutyImage();
             await fetchNews();
             await fetchEvents();
+
         };
 
         initializeData().catch((err) => console.error('Ошибка инициализации данных', err));
     }, []);
+
+    const clearAllNotifications = async () => {
+        const confirmed = window.confirm("Вы уверены, что хотите очистить все уведомления?");
+
+        if (!confirmed) return;
+
+        try {
+            const resId = await fetch('http://localhost:3001/api/current-student-id', {
+                credentials: 'include',
+            });
+            const { studentId } = await resId.json();
+
+            const res = await fetch('http://localhost:3001/api/worked-hours/notifications/clear', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ student_id: studentId }),
+                credentials: 'include',
+            });
+
+            if (!res.ok) throw new Error('Ошибка при очистке');
+
+            // Очистить отображаемый список
+            setNotifications([]);
+        } catch (err) {
+            console.error('Ошибка при очистке уведомлений', err);
+        }
+    };
+
+
 
     const handleLogout = async () => {
         try {
@@ -142,9 +212,59 @@ const StudentPage = () => {
     return (
         <div>
             <header>
-                <div>
+                <div className="left-buttons">
                     <button className="profile-button" onClick={() => navigate('/profile')}>Мой профиль</button>
+                    <div className="notification-wrapper">
+
+                    <button
+                        className={`notifications-button ${showNotifications ? 'active' : ''}`}
+                        onClick={() => setShowNotifications(!showNotifications)}
+                    >
+                     Отработанные часы
+                </button>
                 </div>
+                    {showNotifications && (
+                        <div className="notifications-dropdown">
+                            <div className="notification-summary">
+                                Всего: <span className={totalHours >= 24 ? 'hours-green' : ''}>{totalHours} час(ов)</span>
+                            </div>
+                            <div className="notifications-header">
+                                <button className="clear-button" onClick={clearAllNotifications}>
+                                    Очистить все
+                                </button>
+                            </div>
+
+                            {notifications.length === 0 ? (
+                                <p>Уведомлений нет</p>
+                            ) : (
+                                notifications.map((note, index) => {
+                                    const isPositive = note.hours > 0;
+                                    const hoursAbs = Math.abs(note.hours);
+                                    const actionText = isPositive ? "Вам начислено" : "Вам отнято";
+                                    const hoursColor = isPositive ? 'green' : 'red';
+
+                                    return (
+                                        <div key={index} className="notification-item">
+                                            <p>
+                                                <strong>
+                                                    {actionText}{' '}
+                                                    <span style={{ color: hoursColor }}>
+                                    {hoursAbs} час(ов)
+                                </span>
+                                                </strong>
+                                                <br />
+                                                {note.description}
+                                            </p>
+                                        </div>
+                                    );
+                                })
+                            )}
+                        </div>
+                    )}
+
+                </div>
+
+
                 <div id="datetime">{currentDateTime}</div>
             </header>
 

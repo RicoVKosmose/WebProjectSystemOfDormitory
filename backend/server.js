@@ -483,6 +483,7 @@
         });
     });
 
+
     // Получить всех студентов с часами
     app.get('/api/worked-hours', (req, res) => {
         const query = `
@@ -505,31 +506,52 @@
     app.post('/api/worked-hours/update', (req, res) => {
         const { student_id, delta, description } = req.body;
 
+        const now = new Date();
+        const formattedDate = `[${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1)
+            .toString().padStart(2, '0')}.${now.getFullYear()}]`;
+
+        const datedDescription = `${formattedDate} ${description}`;
+
         const selectQuery = 'SELECT * FROM db.worked_hours WHERE student_id = ?';
         db.query(selectQuery, [student_id], (err, rows) => {
             if (err) return res.status(500).send('Ошибка при проверке записи');
 
             if (rows.length === 0) {
-                // Если записи нет — создаём новую
                 const insertQuery = 'INSERT INTO db.worked_hours (student_id, hours, description) VALUES (?, ?, ?)';
-                db.query(insertQuery, [student_id, delta, description], (err2) => {
+                db.query(insertQuery, [student_id, delta, datedDescription], (err2) => {
                     if (err2) return res.status(500).send('Ошибка при добавлении записи');
-                    res.send('Запись добавлена');
+
+                    // Добавляем запись в лог
+                    const logInsertQuery = `INSERT INTO db.worked_hours_log (student_id, hours_change, description, created_at, is_read) VALUES (?, ?, ?, NOW(), FALSE)`;
+                    db.query(logInsertQuery, [student_id, delta, description], (errLog) => {
+                        if (errLog) console.error('Ошибка при добавлении лога', errLog);
+                        // Отвечаем клиенту, даже если лог не добавился
+                        res.send('Запись добавлена');
+                    });
                 });
             } else {
-                // Если запись уже есть — обновляем
                 const currentHours = rows[0].hours;
-                const newHours = currentHours + delta;  // Добавляем или отнимаем часы
-                const newDescription = rows[0].description + '\n' + description;  // Добавляем новое описание
+                const newHours = currentHours + delta;
+                const newDescription = rows[0].description
+                    ? rows[0].description + '\n' + datedDescription
+                    : datedDescription;
 
                 const updateQuery = 'UPDATE db.worked_hours SET hours = ?, description = ? WHERE student_id = ?';
                 db.query(updateQuery, [newHours, newDescription, student_id], (err3) => {
                     if (err3) return res.status(500).send('Ошибка при обновлении записи');
-                    res.send('Запись обновлена');
+
+                    // Добавляем запись в лог
+                    const logInsertQuery = `INSERT INTO db.worked_hours_log (student_id, hours_change, description, created_at, is_read) VALUES (?, ?, ?, NOW(), FALSE)`;
+                    db.query(logInsertQuery, [student_id, delta, description], (errLog) => {
+                        if (errLog) console.error('Ошибка при добавлении лога', errLog);
+                        res.send('Запись обновлена');
+                    });
                 });
             }
         });
     });
+
+
 
     // Очистить описание у студента
     app.post('/api/worked-hours/clear-description', (req, res) => {
@@ -730,6 +752,114 @@
                 return res.status(404).json({ message: 'Профиль не найден' });
             }
             res.json(result[0]); // Отправляем профиль одного пользователя
+        });
+    });
+
+    app.post('/register', async (req, res) => {
+        const { login, password, name, lastName } = req.body;
+
+        if (!login || !password || !name || !lastName) {
+            return res.status(400).json({ error: 'Все поля обязательны для заполнения' });
+        }
+
+        try {
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            // Проверяем уникальность логина
+            const sqlCheck = 'SELECT * FROM db.users WHERE login = ?';
+            db.query(sqlCheck, [login], (err, results) => {
+                if (err) return res.status(500).json({ error: 'Ошибка сервера' });
+
+                if (results.length > 0) {
+                    return res.status(400).json({ error: 'Логин уже занят' });
+                }
+
+                // Вставляем пользователя
+                const sqlInsertUser = 'INSERT INTO db.users (login, password, role) VALUES (?, ?, ?)';
+                db.query(sqlInsertUser, [login, hashedPassword, 'student'], (err, result) => {
+                    if (err) return res.status(500).json({ error: 'Ошибка при регистрации пользователя' });
+
+                    const userId = result.insertId;  // получаем id вставленного пользователя
+
+                    // Вставляем данные студента
+                    const sqlInsertStudent = 'INSERT INTO db.students (user_id, name, last_name) VALUES (?, ?, ?)';
+                    db.query(sqlInsertStudent, [userId, name, lastName], (err, result) => {
+                        if (err) return res.status(500).json({ error: 'Ошибка при сохранении данных студента' });
+
+                        res.status(200).json({ message: 'Регистрация успешна' });
+                    });
+                });
+            });
+        } catch (error) {
+            res.status(500).json({ error: 'Ошибка на сервере' });
+        }
+    });
+
+    // Получить уведомления для студента (непрочитанные или все)
+    app.get('/api/worked-hours/notifications/:student_id', (req, res) => {
+        const student_id = req.params.student_id;
+        const query = `
+            SELECT id, hours_change AS hours, description, is_read
+            FROM db.worked_hours_log
+            WHERE student_id = ?
+            ORDER BY created_at DESC
+            LIMIT 10
+        `;
+
+        db.query(query, [student_id], (err, rows) => {
+            if (err) return res.status(500).send('Ошибка при получении уведомлений');
+            console.log('SQL result:', rows);  // <-- добавьте этот вывод
+            res.json(rows);
+        });
+    });
+
+
+
+    // Пометить уведомление как прочитанное по id
+    app.post('/api/worked-hours/notifications/read', (req, res) => {
+        const { notification_id } = req.body;
+
+        const updateQuery = 'UPDATE db.worked_hours_log SET is_read = TRUE WHERE id = ?';
+        db.query(updateQuery, [notification_id], (err) => {
+            if (err) return res.status(500).send('Ошибка при обновлении статуса уведомления');
+            res.send('Уведомление отмечено как прочитанное');
+        });
+    });
+
+    // На сервере
+    app.get('/api/current-student-id', (req, res) => {
+        if (!req.session.userId) {
+            return res.status(401).json({ message: 'Не авторизован' });
+        }
+
+        const query = 'SELECT id FROM db.students WHERE user_id = ?';
+        db.query(query, [req.session.userId], (err, results) => {
+            if (err) return res.status(500).send('Ошибка при получении student_id');
+            if (results.length === 0) return res.status(404).send('Студент не найден');
+
+            res.json({ studentId: results[0].id });
+        });
+    });
+
+    app.post('/api/worked-hours/notifications/clear', (req, res) => {
+        const { student_id } = req.body;
+
+        const deleteQuery = 'DELETE FROM db.worked_hours_log WHERE student_id = ?';
+        db.query(deleteQuery, [student_id], (err) => {
+            if (err) return res.status(500).send('Ошибка при удалении уведомлений');
+            res.send('Все уведомления удалены');
+        });
+    });
+
+    app.get('/api/worked-hours/total/:student_id', (req, res) => {
+        const student_id = req.params.student_id;
+
+        const query = `SELECT hours FROM db.worked_hours WHERE student_id = ?`;
+
+        db.query(query, [student_id], (err, results) => {
+            if (err) return res.status(500).send('Ошибка при получении общего количества часов');
+            if (results.length === 0) return res.json({ hours: 0 });
+            res.json({ hours: results[0].hours });
         });
     });
 
