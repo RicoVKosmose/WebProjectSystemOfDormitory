@@ -11,6 +11,7 @@ import WorkedHoursPage from "./pages/WorkedHoursPage";
 import RequestsPage from "./pages/RequestsPage";
 import WorkerPage from "./pages/WorkerPage";
 import Profile from './pages/Profile';
+import ErrorPage from './pages/ErrorPage';
 
 const BodyClassController = () => {
     const location = useLocation();
@@ -52,6 +53,7 @@ const App = () => {
                     <Route path="workedhours" element={<WorkedHoursPage />} />
                     <Route path="requests" element={<RequestsPage />} />
                 </Route>
+                <Route path="*" element={<ErrorPage />} />
             </Routes>
         </Router>
     );
